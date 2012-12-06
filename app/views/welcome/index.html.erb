@@ -1,0 +1,70 @@
+<div style="width: 1000px;">
+  <table id="voters" style="width: 100%;">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Publication</th>
+        <th>Region</th>
+        <% @candidates.each do |candidate| %>
+          <th><%= candidate.name %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% Voter.all.each do |voter| %>
+        <tr>
+          <th><%= voter.name %></th>
+          <td><%= voter.publication %></td>
+          <td><%= voter.region.upcase %></td>
+          <% @candidates.each do |candidate| %>
+            <td><%= candidate.ballots.where(:voter_id => voter.id).first.try(:placement) %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div id="chart_div" class="chart full">
+  
+</div><!--// #name -->
+
+<div id="pie_chart_div" class="chart">
+  
+</div><!--// #pie_chart_div -->
+
+<script type="text/javascript">
+  google.load("visualization", "1", {packages:["corechart"]});
+  google.setOnLoadCallback(drawCharts);
+  function drawCharts() {
+    drawPieChart();
+    drawChart();
+  }
+  
+  function drawPieChart() {
+    var data = google.visualization.arrayToDataTable(<%= raw Candidate.formatted_points_array %>);
+
+    var options = {
+      title: 'Points by Candidate'
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('pie_chart_div'));
+    chart.draw(data, options);
+  }
+  
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable(<%= raw Voter.formatted_region_array %>);
+
+    var options = {
+      title: 'Points by Region',
+      hAxis: {title: 'Region', titleTextStyle: {color: 'red'}}
+    };
+
+    var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
+  
+  $(document).ready(function() {
+    $('#voters').dataTable();
+  });
+</script>

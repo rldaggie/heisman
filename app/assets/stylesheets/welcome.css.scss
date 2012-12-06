@@ -1,0 +1,18 @@
+// Place all the styles related to the welcome controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+* {
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+}
+
+div.chart {
+  height: 500px;
+  width: 50%;
+  float: left;
+}
+
+div.chart.full {
+  width: 100%;
+}
